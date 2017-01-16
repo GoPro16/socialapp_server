@@ -87,7 +87,8 @@ router.post("/post",function(req,res){
 });
 
 router.post("/comment",function(req,res){
-	models.User.create({
+	console.log(req.body);
+	models.Comment.create({
 		content: req.body.content,
 		user: req.body.userid,
 		post: req.body.postid,
