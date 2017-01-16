@@ -14,7 +14,13 @@ var sendResponse = function(res, query){
 
 //Only works if we get the post id
 module.exports.getComments = function(req,res){
-	Comment.findAll({}).then(function(comments){
+	Comment.findAll({where:
+		{
+			user:req.params.userid,
+			post:req.params.postid
+
+		}
+	}).then(function(comments){
 		res.send(comments);
 	});	
 };

@@ -8,15 +8,15 @@ var UserMethods = require("../controllers/userController.js"),
 
 
 /* ==================== API ENDPOINTS ====================== */
-router.get("/api/users/:id/posts",PostMethods.getPosts);
-router.post("/api/users/:id/posts",PostMethods.createPost);
+router.get("/api/users/:userid/posts",PostMethods.getPosts);
+router.post("/api/users/:userid/posts",PostMethods.createPost);
 
-router.get("/api/users/:id/posts/:id/comments",CommentMethods.getComments);
-router.post("/api/users/:id/posts/:id/comments",CommentMethods.createComment);
+router.get("/api/users/:userid/posts/:postid/comments",CommentMethods.getComments);
+router.post("/api/users/:userid/posts/:postid/comments",CommentMethods.createComment);
 
-router.get("/api/users/:id/followers",FollowMethods.getFollowers);
-router.get("/api/users/:id/following",FollowMethods.getFollowing);
-router.post("/api/users/:id/follow",FollowMethods.addFollow);
+router.get("/api/users/:userid/followers",FollowMethods.getFollowers);
+router.get("/api/users/:userid/following",FollowMethods.getFollowing);
+router.post("/api/users/:userid/follow",FollowMethods.addFollow);
 
 router.post("/api/users",UserMethods.createUser);
 router.get("/api/users",UserMethods.getUsers);
@@ -106,14 +106,14 @@ router.post("/comment",function(req,res){
 router.post("/delete",function(req,res){
 	console.log(req.body.id);
 	models.User.findAll({where:{id:req.body.id}}).then(function(user){
-		models.Post.destroy({where:{user:user.id}}).then(function(rowDeleted){
-			console.log('success delete posts');
+		models.Post.destroy({where:{user:req.body.id}}).then(function(rowDeleted){
+			console.log('success deleted posts');
 		});
-		models.Comment.destroy({where:{user:user.id}}).then(function(commentDeleted){
-			console.log('success dlete comment');
+		models.Comment.destroy({where:{user:req.body.id}}).then(function(commentDeleted){
+			console.log('success deleted comments');
 		});
 		models.User.destroy({where:{id: req.body.id}}).then(function(deletedUser){
-			console.log('user delted');
+			console.log('user deleted user');
 		});
 
 		res.redirect("/");

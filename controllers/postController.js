@@ -15,7 +15,7 @@ var sendResponse = function(res, query){
 };
 
 module.exports.getPosts = function(req,res){
-	Post.findAll({}).then(function(posts){
+	Post.findAll({where:{user:req.params.userid}}).then(function(posts){
 		res.send(posts);
 	});	
 };

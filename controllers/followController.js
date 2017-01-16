@@ -12,13 +12,13 @@ var sendResponse = function(res, query){
 };
 
 module.exports.getFollowers = function(req,res){
-	Follow.findAll({}).then(function(followers){
+	Follow.findAll({where:{following:req.params.userid}}).then(function(followers){
 		res.send(followers);
 	});	
 };
 
 module.exports.getFollowing = function(req,res){
-	Follow.findAll({}).then(function(following){
+	Follow.findAll({where:{follower:req.params.userid}}).then(function(following){
 		res.send(following);
 	});	
 };
