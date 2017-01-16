@@ -19,3 +19,6 @@ Run the App:
 $ npm start
 ```
 Go To local address for control panel
+```html
+localhost:3000/
+```
