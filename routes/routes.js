@@ -36,7 +36,7 @@ router.get("/",function(req,res){
 					postCount = 0;
 					commentCount = 0;
 					posts.forEach(function(post){
-						if(user.id == post.id){
+						if(user.id == post.user){
 							postCount++;
 						}
 						user.postCount = postCount;
