@@ -1,5 +1,4 @@
-Social App API 
- [![NPM Version][npm-image]][npm-url]
+#Social App API 
 
 ##Installation
 ```bash
