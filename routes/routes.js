@@ -50,14 +50,15 @@ router.get("/",function(req,res){
 					});
 				});
 				res.render('home',{
-					users:users,
-					posts:posts,
-					comments:comments
+					users:users
 				});
 			});
 		});
 	});
 });
+
+
+
 router.post("/user",function(req,res){
 	models.User.create({
 		username : req.body.username,
@@ -67,7 +68,7 @@ router.post("/user",function(req,res){
 		}
 		res.redirect("/");
 	}).catch(function(err){
-		res.send(err);
+		res.redirect("/");
 	});
 });
 
@@ -82,7 +83,7 @@ router.post("/post",function(req,res){
 		}
 		res.redirect("/");
 	}).catch(function(err){
-		res.send(err);
+		res.redirect("/");
 	});
 });
 
@@ -98,7 +99,7 @@ router.post("/comment",function(req,res){
 		}
 		res.redirect("/");
 	}).catch(function(err){
-		res.send(err);
+		res.redirect("/");
 	});
 });
 
