@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Social App</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css">
+        <link rel="stylesheet" href="/stylesheets/main.css" type="text/css">
+        <link rel="icon" href="/header.ico">
+    </head>
+    <body>
+    	<div class="jumbotron">
+    		<h1><i class="code icon"></i>Social App API</h1>
+    	</div>
+      <table class="ui celled table">
+        <thead>
+          <tr><th>Username</th>
+              <th>hash</th>
+              <th>userid</th>
+              <th>Posts</th>
+              <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function(user){ %>
+            <tr>
+              <td><%=user.username%>
+                <form action="/delete" method="POST">
+                <input type="text" name="id" id="special" value="<%=user.id%>">
+                  <button class="ui button red">Delete</button>
+                </form>
+              </td>
+              <td><%=user.hash%></td>
+              <td><%=user.id%></td>
+              <td><%=user.postCount%></td>
+              <td><%=user.commentCount%></td>
+            </tr>
+          <%}); %>
+            <tr><form class="ui form" action="/user" method="POST"><!-- Create User -->
+              <td>
+              <label>Create User</label>
+              <div class="field"><input type="text" name="username" placeholder="Username"></div></td>
+              <td>
+              <div class="field"><input type="text" name="hash" placeholder="Hash"></div></td>
+              <td><button class="ui button primary">Create</button></td>
+            </form></tr> <!-- Create Post -->
+            <tr><form class="ui form" action="/post" method="POST"><!-- Create User -->
+              <td>
+              <label>Create Post</label>
+              <div class="field"><input type="text" name="userid" placeholder="userid"></div></td>
+              <td><div class="field"><input type="text" name="content" placeholder="Post"></div></td>
+              <td><button class="ui button primary">Create</button></td>
+            </form></tr> <!-- Create Comment-->
+            <tr><form class="ui form" action="/comment" method="POST"><!-- Create User -->
+              <td><label>Create Comment</label><div class="field">
+                <input type="text" name="userid" placeholder="userid">
+                <input type="text" name="postid" placeholder="postid">
+                </div></td>
+              <td><div class="field"><input type="text" name="content" placeholder="Comment"></div></td>
+              <td><button class="ui button primary">Create</button></td>
+            </form></tr>
+        </tbody>
+      </table>
+    </body>
+</html>

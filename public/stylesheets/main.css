@@ -17,4 +17,6 @@ body{
 	align-self: center;
 }
 
-
+#special{
+	display:none;
+}
