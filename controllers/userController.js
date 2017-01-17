@@ -31,3 +31,21 @@ module.exports.createUser = function(req,res){
 		res.send(err);
 	});
 };
+
+module.exports.checkPassword = function(username, password){
+  return User.findAll({where: {username: username},raw: true}).spread(function(user){
+      if(user){
+        var verified = bcrypt.compareSync(password, user.password);
+        if( verified){
+          return user;
+        }else{
+          return{error: 'Username or Password Invalid!'};
+        }
+      }else{
+        return{error: 'Username or Password Invalid!'};
+      }
+    })
+    .catch(function(err){
+      return {error: err};
+    })
+};

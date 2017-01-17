@@ -5,9 +5,12 @@ var UserMethods = require("../controllers/userController.js"),
 	CommentMethods = require("../controllers/commentController.js"),
 	PostMethods = require("../controllers/postController.js"),
 	FollowMethods = require("../controllers/followController.js");
+var Auth = require('../MiddleWare/auth.js');
 
 
 /* ==================== API ENDPOINTS ====================== */
+router.post("/login",Auth.login);
+
 router.get("/api/users/:userid/posts",PostMethods.getPosts);
 router.post("/api/users/:userid/posts",PostMethods.createPost);
 

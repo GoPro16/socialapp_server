@@ -14,6 +14,7 @@
     "ejs": "^2.5.5",
     "express": "^4.14.0",
     "fs": "0.0.1-security",
+    "jwt-simple": "^0.5.1",
     "mongoose": "^4.7.6",
     "mysql": "^2.12.0",
     "path": "^0.12.7",
