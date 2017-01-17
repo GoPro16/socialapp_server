@@ -31,7 +31,7 @@ app.all('/*', function(req, res, next) {
 //ROUTES
 app.use('/', require('./routes/routes'));
 app.use(express.static(__dirname+"/public"));//for stylesheet
-app.all('/api/*', [require('./MiddleWare/validateRequest')]);
+app.all('/api/*', [require('./middleware/validateRequest')]);
 
 models.sequelize.sync({force: false}).then(function () {
   var server = app.listen(3000, function() {

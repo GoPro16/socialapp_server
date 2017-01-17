@@ -5,7 +5,7 @@ var UserMethods = require("../controllers/userController.js"),
 	CommentMethods = require("../controllers/commentController.js"),
 	PostMethods = require("../controllers/postController.js"),
 	FollowMethods = require("../controllers/followController.js");
-var Auth = require('../MiddleWare/auth.js');
+var Auth = require('../middleware/auth.js');
 
 
 /* ==================== API ENDPOINTS ====================== */

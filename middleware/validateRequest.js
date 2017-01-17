@@ -1,6 +1,6 @@
 var jwt = require('jwt-simple');
-var validateUser = require('../MiddleWare/auth').validateUser;
-var secret = require('../Keys/apiKey');
+var validateUser = require('../middleware/auth').validateUser;
+var secret = require('../keys/apiKey');
 
 module.exports = function(req, res, next) {
   // When performing a cross domain request, you will recieve
