@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var Sequelize = require('sequelize');
 var models = require("./database/models");
 
+
 models.sequelize.authenticate().then(function(err){
 	console.log('Connection established with DB');
 },function(err){

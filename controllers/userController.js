@@ -1,4 +1,5 @@
 var models = require('../database/models');
+var bcrypt = require('bcrypt-nodejs');
 var User = models.User;
 
 var sendResponse = function(res, query){
@@ -19,9 +20,10 @@ module.exports.getUsers = function(req,res){
 
 
 module.exports.createUser = function(req,res){
+  var hash = bcrypt.hashSync(req.body.hash);
 	var newUser = {
 		username : req.body.username,
-		hash : req.body.hash
+		hash : hash
 	};
 	User.create(newUser).spread(function(user,create){
 		if(create){
@@ -35,7 +37,8 @@ module.exports.createUser = function(req,res){
 module.exports.checkPassword = function(username, password){
   return User.findAll({where: {username: username},raw: true}).spread(function(user){
       if(user){
-        if(password === user.hash){
+        var verified = bcrypt.compareSync(password, user.hash);
+        if(verified){
           return user;
         }else{
           return{error: 'Username or Password Invalid!'};

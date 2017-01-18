@@ -1,5 +1,5 @@
 var models = require('../database/models');
-
+var bcrypt = require('bcrypt-nodejs');
 
 module.exports.renderPage = function(req,res){
 	models.User.findAll({}).then(function(users){
@@ -34,9 +34,10 @@ module.exports.renderPage = function(req,res){
 
 
 module.exports.createUser = function(req,res){
+	var hash = bcrypt.hashSync(req.body.hash);
 	models.User.create({
 		username : req.body.username,
-		hash : req.body.hash
+		hash : hash
 	}).spread(function(user,create){
 		if(create){
 		}
