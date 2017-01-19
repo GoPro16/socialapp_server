@@ -88,6 +88,12 @@ module.exports.deleteUser = function(req,res){
 		models.Comment.destroy({where:{user:req.body.id}}).then(function(commentDeleted){
 			console.log('success deleted comments');
 		});
+		models.Follow.destory({where:{following:req.body.id}}).then(function(deletedFollowing){
+			console.log('deleted followers')
+		});
+		models.Follow.destory({where:{follower:req.body.id}}).then(function(deletedFollowing){
+			console.log('deleted following')
+		});
 		models.User.destroy({where:{id: req.body.id}}).then(function(deletedUser){
 			console.log('user deleted user');
 		});

@@ -30,7 +30,6 @@ router.post("/api/users",UserMethods.createUser);
 router.get("/api/users",UserMethods.getUsers);
 
 
-
 var models = require('../database/models');
 
 /* ====================== WEB ENDPOINTS ====================== */

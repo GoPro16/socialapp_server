@@ -21,9 +21,11 @@ module.exports = function(req, res, next) {
         });
         return;
       }
+      console.log('key:'+key);
       // Authorize the user to see if s/he can access our resources
       // The key would be the logged in user's username
       validateUser(key).then(function(dbUser){
+        console.log('Db user!:'+dbUser);
         if (dbUser) {
           if ((req.url.indexOf('admin') >= 0 && dbUser.role == 'admin') || (req.url.indexOf('admin') < 0 && req.url.indexOf('/api/') >= 0)) {
             next(); // To move to next middleware

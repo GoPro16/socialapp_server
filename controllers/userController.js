@@ -34,6 +34,24 @@ module.exports.createUser = function(req,res){
 	});
 };
 
+module.exports.validateUsername = function(username){
+  var query = {
+    where: {username: username},
+    raw: true,
+  };
+  return User.findAll(query).spread(function(user){
+    if(user){
+      return user;
+    }else {
+      return{error: 'Invalid Username'};
+    }
+  })
+  .catch(function(err){
+    return {error: err};
+  })
+};
+
+
 module.exports.checkPassword = function(username, password){
   return User.findAll({where: {username: username},raw: true}).spread(function(user){
       if(user){
