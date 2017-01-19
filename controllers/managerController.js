@@ -5,27 +5,44 @@ module.exports.renderPage = function(req,res){
 	models.User.findAll({}).then(function(users){
 		models.Post.findAll({}).then(function(posts){
 			models.Comment.findAll({}).then(function(comments){
-				var postCount;
-				var commentCount;
-				users.forEach(function(user){
-					postCount = 0;
-					commentCount = 0;
-					posts.forEach(function(post){
-						if(user.id == post.user){
-							postCount++;
-						}
-						user.postCount = postCount;
-					});
+				models.Follow.findAll({}).then(function(follows){
+					var postCount;
+					var commentCount;
+					var followerCount;
+					var followCount;
+					users.forEach(function(user){
+						postCount = 0;
+						commentCount = 0;
+						followerCount = 0;
+						followCount = 0;
+						follows.forEach(function(follow){
+							if(user.id == follow.follower){
+								followCount++;
+							}
+							if(user.id == follow.following){
+								followerCount++;
+							}
+							user.followerCount = followerCount;
+							user.followCount = followCount;
+						});
 
-					comments.forEach(function(comment){
-						if(user.id == comment.user){
-							commentCount++;
-						}
-						user.commentCount = commentCount;
+						posts.forEach(function(post){
+							if(user.id == post.user){
+								postCount++;
+							}
+							user.postCount = postCount;
+						});
+
+						comments.forEach(function(comment){
+							if(user.id == comment.user){
+								commentCount++;
+							}
+							user.commentCount = commentCount;
+						});
 					});
-				});
-				res.render('home',{
-					users:users
+					res.render('home',{
+						users:users
+					});
 				});
 			});
 		});
@@ -34,16 +51,39 @@ module.exports.renderPage = function(req,res){
 
 
 module.exports.createUser = function(req,res){
-	var hash = bcrypt.hashSync(req.body.hash);
 	models.User.create({
 		username : req.body.username,
-		hash : hash
+		hash : req.body.hash
 	}).spread(function(user,create){
 		if(create){
 		}
 		res.redirect("/");
 	}).catch(function(err){
 		res.redirect("/");
+	});
+};
+
+module.exports.addFollow = function(req,res){
+	models.Follow.findAll({where:{
+		following:req.body.following,
+		follower:req.body.follower
+	}}).then(function(follower){
+		if(follower){
+			console.log('follower exists');
+			res.redirect("/");
+		}else{
+			var newFollower = {
+		 	follower : req.body.follower,
+		 	following: req.body.following
+			};
+			models.Follow.create(newFollower).spread(function(follower,create){
+			if(create){
+			}
+			res.redirect("/");
+			}).catch(function(err){
+				res.redirect("/");
+			});
+		}
 	});
 };
 

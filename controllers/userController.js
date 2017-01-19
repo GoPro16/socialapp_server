@@ -18,12 +18,35 @@ module.exports.getUsers = function(req,res){
 	});	
 };
 
+module.exports.checkUser = function(req, res){
+  var userData = req.params;
+  var options = {
+    where: {
+      $or: {
+        username:userData.username
+      }
+    }
+  };
+  Users.findAll(options).spread(function(user) {
+    if (user) {
+      let error = 'unknown error';
+      if (user.username === userData.username) {
+        error = 'username exists already'
+      }
+      res.send({error})
+    } else {
+      res.send({success: 'User available'})
+    }
+  }).catch(function(err){
+    res.send(err);
+  });
+};
+
 
 module.exports.createUser = function(req,res){
-  var hash = bcrypt.hashSync(req.body.hash);
 	var newUser = {
 		username : req.body.username,
-		hash : hash
+		hash : req.body.hash
 	};
 	User.create(newUser).spread(function(user,create){
 		if(create){

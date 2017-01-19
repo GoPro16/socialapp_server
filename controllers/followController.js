@@ -25,15 +25,24 @@ module.exports.getFollowing = function(req,res){
 
 
 module.exports.addFollow = function(req,res){
-	var newFollower = {
-		 follower : req.body.currentuserid,
-		 following: req.body.otheruserid
-	};
-	Follow.create(newFollower).spread(function(follower,create){
-		if(create){
+	models.Follow.findAll({where:{
+		following:req.body.following,
+		follower:req.body.follower
+	}}).then(function(follower){
+		if(follower){
+			res.send(follower);
+		}else{
+			var newFollower = {
+		 	follower : req.body.follower,
+		 	following: req.body.following
+			};
+			models.Follow.create(newFollower).spread(function(follower,create){
+			if(create){
+			}
+			res.send(newFollower)
+			}).catch(function(err){
+				res.send(err);
+			});
 		}
-		res.send(follower);
-	}).catch(function(err){
-		res.send(err);
 	});
 };

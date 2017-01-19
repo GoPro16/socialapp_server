@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-
 //Models 
 var UserMethods = require("../controllers/userController.js"),
 	CommentMethods = require("../controllers/commentController.js"),
@@ -11,7 +10,6 @@ var UserMethods = require("../controllers/userController.js"),
 
 //Middleware for sending token to user
 var Auth = require('../middleware/auth.js');
-
 
 /* ==================== API ENDPOINTS ====================== */
 router.post("/login",Auth.login);
@@ -28,7 +26,7 @@ router.post("/api/users/:userid/follow",FollowMethods.addFollow);
 
 router.post("/api/users",UserMethods.createUser);
 router.get("/api/users",UserMethods.getUsers);
-
+router.get("/api/users/check",UserMethods.checkUser);
 
 var models = require('../database/models');
 
@@ -42,6 +40,8 @@ router.post("/post",ConsoleMethods.createPost);
 router.post("/comment",ConsoleMethods.createComment);
 
 router.post("/delete",ConsoleMethods.deleteUser);
+
+router.post("/follow",ConsoleMethods.addFollow);
 
 //======================================
 module.exports = router;

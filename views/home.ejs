@@ -17,6 +17,8 @@
               <th>userid</th>
               <th>Posts</th>
               <th>Comments</th>
+              <th>Followers</th>
+              <th>Following</th>
           </tr>
         </thead>
         <tbody>
@@ -32,6 +34,8 @@
               <td><%=user.id%></td>
               <td><%=user.postCount%></td>
               <td><%=user.commentCount%></td>
+              <td><%=user.followerCount%></td>
+              <td><%=user.followCount%></td>
             </tr>
           <%}); %>
             <tr><form class="ui form" action="/user" method="POST"><!-- Create User -->
@@ -55,6 +59,13 @@
                 <input type="text" name="postid" placeholder="postid">
                 </div></td>
               <td><div class="field"><input type="text" name="content" placeholder="Comment"></div></td>
+              <td><button class="ui button primary">Create</button></td>
+            </form></tr>
+            <tr><form class="ui form" action="/follow" method="POST"><!-- Add a follower -->
+              <td><label>Add a follower</label><div class="field">
+                <input type="text" name="follower" placeholder="follower(id)">
+                <input type="text" name="following" placeholder="following(id)">
+                </div></td>
               <td><button class="ui button primary">Create</button></td>
             </form></tr>
         </tbody>

@@ -32,7 +32,15 @@ app.all('/*', function(req, res, next) {
 //ROUTES
 app.use('/', require('./routes/routes'));
 app.use(express.static(__dirname+"/public"));//for stylesheet
-app.all('/api/*', [require('./middleware/validateRequest')]);
+app.all('/api/v1/*', [require('./middleware/validateRequest')]);
+
+
+//For error catching so no endless loops
+app.use(function(req, res, next) {
+  var err = new Error('Route Not Found');
+  err.status = 404;
+  next(err);
+});
 
 models.sequelize.sync({force: false}).then(function () {
   var server = app.listen(3000, function() {
