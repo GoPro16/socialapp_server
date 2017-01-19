@@ -8,8 +8,8 @@ module.exports = function(req, res, next) {
 
   // We skip the token outh for [OPTIONS] requests.
   //if(req.method == 'OPTIONS') next();
-  var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
-  var key = (req.body && req.body.x_key) || (req.query && req.query.x_key) || req.headers['x-key'];
+  var token = (req.params && req.params.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
+  var key = (req.params && req.params.x_key) || (req.query && req.query.x_key) || req.headers['x-key'];
   if (token || key) {
     try {
       var decoded = jwt.decode(token, secret());
@@ -21,13 +21,11 @@ module.exports = function(req, res, next) {
         });
         return;
       }
-      console.log('key:'+key);
       // Authorize the user to see if s/he can access our resources
       // The key would be the logged in user's username
       validateUser(key).then(function(dbUser){
-        console.log('Db user!:'+dbUser);
         if (dbUser) {
-          if ((req.url.indexOf('admin') >= 0 && dbUser.role == 'admin') || (req.url.indexOf('admin') < 0 && req.url.indexOf('/api/') >= 0)) {
+          if (true) {//Always authorized unless we decide to put check for admins only
             next(); // To move to next middleware
           } else {
             res.status(403);

@@ -1,5 +1,7 @@
 var models = require('../database/models');
 var bcrypt = require('bcrypt-nodejs');
+var ValidateRequest = require('../middleware/ValidateRequest.js');
+
 
 module.exports.renderPage = function(req,res){
 	models.User.findAll({}).then(function(users){

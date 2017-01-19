@@ -3,7 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var Sequelize = require('sequelize');
 var models = require("./database/models");
-
+var validateRequest = require('./middleware/validateRequest');
 
 models.sequelize.authenticate().then(function(err){
 	console.log('Connection established with DB');
@@ -32,15 +32,8 @@ app.all('/*', function(req, res, next) {
 //ROUTES
 app.use('/', require('./routes/routes'));
 app.use(express.static(__dirname+"/public"));//for stylesheet
-app.all('/api/v1/*', [require('./middleware/validateRequest')]);
 
 
-//For error catching so no endless loops
-app.use(function(req, res, next) {
-  var err = new Error('Route Not Found');
-  err.status = 404;
-  next(err);
-});
 
 models.sequelize.sync({force: false}).then(function () {
   var server = app.listen(3000, function() {

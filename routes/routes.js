@@ -11,8 +11,18 @@ var UserMethods = require("../controllers/userController.js"),
 //Middleware for sending token to user
 var Auth = require('../middleware/auth.js');
 
+//Requires that all routes validate their request
+router.all('/api/*',require('../middleware/ValidateRequest.js'));
+
 /* ==================== API ENDPOINTS ====================== */
 router.post("/login",Auth.login);
+router.get("/login",function(req,res){
+	res.render('loginpage');
+});
+
+router.get("/home",function(req,res){
+	res.render('landingpage');
+});	
 
 router.get("/api/users/:userid/posts",PostMethods.getPosts);
 router.post("/api/users/:userid/posts",PostMethods.createPost);
