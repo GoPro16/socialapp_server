@@ -16,13 +16,6 @@ router.all('/api/*',require('../middleware/ValidateRequest.js'));
 
 /* ==================== API ENDPOINTS ====================== */
 router.post("/login",Auth.login);
-router.get("/login",function(req,res){
-	res.render('loginpage');
-});
-
-router.get("/home",function(req,res){
-	res.render('landingpage');
-});	
 
 router.get("/api/users/:userid/posts",PostMethods.getPosts);
 router.post("/api/users/:userid/posts",PostMethods.createPost);
@@ -41,6 +34,8 @@ router.get("/api/users/check",UserMethods.checkUser);
 var models = require('../database/models');
 
 /* ====================== WEB ENDPOINTS ====================== */
+//Eventually all will be react 
+
 router.get("/",ConsoleMethods.renderPage);
 
 router.post("/user",ConsoleMethods.createUser);
