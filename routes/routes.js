@@ -53,5 +53,9 @@ router.post("/delete",ConsoleMethods.deleteUser);
 
 router.post("/follow",ConsoleMethods.addFollow);
 
+router.get("/feed",function(req,res){
+	res.render('feed');
+});
+
 //======================================
 module.exports = router;
