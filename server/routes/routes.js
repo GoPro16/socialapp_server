@@ -12,23 +12,23 @@ var UserMethods = require("../controllers/userController.js"),
 var Auth = require('../middleware/auth.js');
 
 //Requires that all routes validate their request
-router.all('/api/*',require('../middleware/ValidateRequest.js'));
+router.all('/api/v1/*',require('../middleware/ValidateRequest.js'));
 
 /* ==================== API ENDPOINTS ====================== */
 router.post("/login",Auth.login);
 
-router.get("/api/users/:userid/posts",PostMethods.getPosts);
-router.post("/api/users/:userid/posts",PostMethods.createPost);
+router.get("/api/v1/users/:userid/posts",PostMethods.getPosts);
+router.post("/api/v1/users/:userid/posts",PostMethods.createPost);
 
-router.get("/api/users/:userid/posts/:postid/comments",CommentMethods.getComments);
-router.post("/api/users/:userid/posts/:postid/comments",CommentMethods.createComment);
+router.get("/api/v1/users/:userid/posts/:postid/comments",CommentMethods.getComments);
+router.post("/api/v1/users/:userid/posts/:postid/comments",CommentMethods.createComment);
 
-router.get("/api/users/:userid/followers",FollowMethods.getFollowers);
-router.get("/api/users/:userid/following",FollowMethods.getFollowing);
-router.post("/api/users/:userid/follow",FollowMethods.addFollow);
+router.get("/api/v1/users/:userid/followers",FollowMethods.getFollowers);
+router.get("/api/v1/users/:userid/following",FollowMethods.getFollowing);
+router.post("/api/v1/users/:userid/follow",FollowMethods.addFollow);
 
 router.post("/api/users",UserMethods.createUser);
-router.get("/api/users",UserMethods.getUsers);
+router.get("/api/v1/users",UserMethods.getUsers);
 router.get("/api/users/check",UserMethods.checkUser);
 
 var models = require('../database/models');

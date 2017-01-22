@@ -1,6 +1,12 @@
+.container {
+    padding-left : 0;
+    padding-right : 0;
+    width : auto;
+}
+
 .login-dark {
   height:1000px;
-  background:#475d62 url(../star-sky.jpg);
+  background:#475d62 url(../../assets/star-sky.jpg);
   background-size:cover;
   position:relative;
 }
@@ -25,6 +31,8 @@
   font-size:100px;
   color:#2980ef;
 }
+
+
 
 .login-dark form .form-control {
   background:none;

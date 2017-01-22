@@ -27,7 +27,7 @@ var Auth = {
         }
         if (dbUserObj) {
           //success -> generate and token and send to client
-          res.redirect("/home");
+          res.json(genToken(dbUserObj));
         }
       });
     },
