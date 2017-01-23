@@ -18,7 +18,6 @@ module.exports.getComments = function(req,res){
 		{
 			user:req.params.userid,
 			post:req.params.postid
-
 		}
 	}).then(function(comments){
 		res.send(comments);
@@ -28,15 +27,25 @@ module.exports.getComments = function(req,res){
 
 module.exports.createComment = function(req,res){
 	var newComment = {
+		post: req.body.post.id,
 		content: req.body.content,
-		user: req.body.userid,
-		post: req.body.postid,
 		time: Date.now()
 	};
 	Comment.create(newComment).spread(function(comment,create){
 		if(create){
 		}
 		res.send({comment});
+	}).catch(function(err){
+		res.send(err);
+	});
+};
+
+
+module.exports.addContent = function(post,content){
+	models.Content.create({content:content,post:post.id}).spread(function(newPost,create){
+		if(create){
+		}
+		return;
 	}).catch(function(err){
 		res.send(err);
 	});

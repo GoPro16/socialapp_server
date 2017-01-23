@@ -46,7 +46,14 @@ module.exports.checkUser = function(req, res){
 module.exports.createUser = function(req,res){
 	var newUser = {
 		username : req.body.username,
-		hash : req.body.hash
+		email : req.body.email,
+    hash: req.body.hash,
+    firstName : req.body.firstName,
+    lastName : req.body.lastName,
+    birthday : req.body.birthday,
+    dateJoined : Date.now(),
+    overallRating : 0,
+    slogan : ""
 	};
 	User.create(newUser).spread(function(user,create){
 		if(create){
@@ -59,8 +66,11 @@ module.exports.createUser = function(req,res){
 
 module.exports.validateUsername = function(username){
   var query = {
-    where: {username: username},
-    raw: true,
+    where: {
+        $or: {
+          username:userData.username
+        }
+      }
   };
   return User.findAll(query).spread(function(user){
     if(user){

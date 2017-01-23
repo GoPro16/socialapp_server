@@ -2,13 +2,12 @@
 
 module.exports = function(sequelize,DataTypes){
 	var Comment = sequelize.define('Comment',{
-		content : DataTypes.STRING,
-		time : DataTypes.DATE
+		time : DataTypes.DATE,
+		content : DataTypes.STRING
 	},{
 		classMethods: {
 			//associated with userid
 			associate: function(models) {
-        		Comment.belongsTo(models.User,{foreignKey:'user'});
         		Comment.belongsTo(models.Post,{foreignKey:'post'});
       		}
 		},

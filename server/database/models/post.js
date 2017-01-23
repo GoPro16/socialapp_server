@@ -2,13 +2,14 @@
 
 module.exports = function(sequelize,DataTypes){
 	var Post = sequelize.define('Post',{
-		content: DataTypes.STRING,
 		time: DataTypes.DATE
 	},{
 		classMethods: {
 			//associated with userid
 			associate: function(models) {
-        		Post.belongsTo(models.User,{foreignKey:'user'});
+        		Post.belongsTo(models.User,{foreignKey:'author'});
+        		Post.hasMany(models.Media);
+        		Post.hasMany(models.Content);
         	}
 		},
 		tableName: 'posts'
