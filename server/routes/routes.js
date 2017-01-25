@@ -33,7 +33,7 @@ router.get("/api/v1/users/:userid/following",ConnectionMethods.getFollowing);
 router.post("/api/v1/users/:userid/follow",ConnectionMethods.addConnection);
 
 //Gets all users(requires admin validation)
-router.get("/api/v1/users",UserMethods.getUsers);
+router.get("/api/users",UserMethods.getUsers);
 
 //Checks if a user exists/valid
 router.get("/api/users/check",UserMethods.checkUser);
