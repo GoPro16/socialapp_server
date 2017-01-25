@@ -58,18 +58,16 @@ module.exports.createUser = function(req,res){
 	User.create(newUser).spread(function(user,create){
 		if(create){
 		}
-		res.send(user);
+		res.redirect("/api/login",{username:user.username,password:user.hash});
 	}).catch(function(err){
 		res.send(err);
 	});
 };
 
-module.exports.validateUsername = function(username){
+module.exports.validateUsername = function(user){
   var query = {
     where: {
-        $or: {
-          username:userData.username
-        }
+        username:user
       }
   };
   return User.findAll(query).spread(function(user){

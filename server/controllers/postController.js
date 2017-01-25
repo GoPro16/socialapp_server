@@ -14,15 +14,26 @@ var sendResponse = function(res, query){
 };
 
 module.exports.getPosts = function(req,res){
-	Post.findAll({where:{user:req.params.userid}}).then(function(posts){
+	Post.findAll({where:{username:req.headers.x_username}}).then(function(posts){
 		post.forEach(function(post){
 			posts.pop(post);
 			post.content = getContent(post.id);
-			post.media = getContent(post.id);
-			post.comments = getContent(post.id);
-			post.push(post);
+			post.media = getMedia(post.id);
+			post.comments = getComments(post.id);
+			post.stars = getStars(post.id);
+			posts.push(post);
 		});//end for each
 		res.send(posts);
+	});//end query	
+};
+
+module.exports.getOnePost = function(req,res){
+	Post.findAll({where:{username:req.params.username,id:req.params.id}}).then(function(post){
+		post.content = getContent(post.id);
+		post.media = getMedia(post.id);
+		post.comments = getComments(post.id);
+		post.stars = getStars(post.id);
+		res.send(post);
 	});//end query	
 };
 
@@ -30,7 +41,7 @@ module.exports.getPosts = function(req,res){
 module.exports.createPost = function(req,res){
 	var newPost = {
 		time: Date.now(),
-		author: req.body.user.id
+		username: req.headers.x_username
 	};
 	Post.create(newPost).spread(function(post,create){
 		var media;
@@ -43,10 +54,13 @@ module.exports.createPost = function(req,res){
 		if(req.body.content){
 			content = addContent(post,req.body.content);
 		}
-		res.send({
-			post:post,
-			media:media,
-			content:content
+		getOnePost({
+			req:{
+				params:{
+					username:post.author,
+					id:post.id
+				}
+			}
 		});
 	}).catch(function(err){
 		res.send(err);
@@ -72,6 +86,14 @@ module.exports.getComments = function(post){
 	});
 };
 
+module.exports.getStars = function(post){
+	models.Star.findAll({where:{post:post}}).then(function(stars){
+		return stars;
+	});
+};
+
+
+
 
 // =================================== END =================================== //
 
@@ -94,4 +116,10 @@ module.exports.addContent = function(post,content){
 	}).catch(function(err){
 		res.send(err);
 	});
+};
+
+
+//@Not working yet
+module.exports.toggleStar = function(post,user){
+	return post;
 };
