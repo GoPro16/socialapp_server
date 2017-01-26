@@ -37,5 +37,32 @@ router.get("/api/v1/users",UserMethods.getUsers);
 //Checks if a user exists/valid
 router.get("/api/users/check",UserMethods.checkUser);
 
-//======================================
+//========================================================== //
+/* ==================== TEMPORARY ROUTES =================== */
+var models = require('../database/models/');
+
+router.get("/api/v1/users/content",function(req,res){
+	models.Content.findAll({}).then(function(content){
+		console.log('content:'+content);
+		res.send(content);
+	});
+});
+
+router.get("/api/v1/users/media",function(req,res){
+	models.Media.findAll({}).then(function(media){
+		console.log('media:'+media);
+		res.send(media);
+	});
+});
+
+router.get("/api/v1/users/deletePosts",function(req,res){
+	models.Post.findAll({}).then(function(posts){
+		posts.forEach(function(post){
+			post.destroy();
+		});
+		res.send('Deleted all posts');
+	});	
+});
+
+//========================================================== //
 module.exports = router;

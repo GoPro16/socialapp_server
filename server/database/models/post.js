@@ -8,8 +8,6 @@ module.exports = function(sequelize,DataTypes){
 			//associated with userid
 			associate: function(models) {
         		Post.belongsTo(models.User,{foreignKey:'username'});
-        		Post.hasMany(models.Media);
-        		Post.hasMany(models.Content);
         	}
 		},
 		tableName: 'posts'

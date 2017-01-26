@@ -26,6 +26,7 @@ module.exports = function(req, res, next) {
       validateUser(key).then(function(dbUser){
         if (dbUser) {
           if (true) {//Always authorized unless we decide to put check for admins only
+            console.log('Successfully validated User');
             next(); // To move to next middleware
           } else {
             res.status(403);

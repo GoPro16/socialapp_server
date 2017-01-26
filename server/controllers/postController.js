@@ -2,6 +2,56 @@ var models = require('../database/models');
 var Post = models.Post;
 
 
+var Db = {
+	getMedia: function(post){
+		models.Media.findAll({where:{post:post}}).then(function(media){
+			return media;
+		});
+	},
+	getContent: function(post){
+		models.Content.findAll({where:{post:post}}).then(function(newContent){
+			console.log('content: '+newContent.content);
+			return newContent;
+		});
+	},
+	getComments: function(post){
+		models.Comment.findAll({where:{post:post}}).then(function(comments){
+			return comments;
+		});
+	},
+	getStars: function(post){
+		models.Star.findAll({where:{post:post}}).then(function(stars){
+			return stars;
+		});
+	},
+	addMedia: function(post,media){
+		if(media){
+			models.Media.create({link:media,post:post}).then(function(newMedia,create){
+			if(create){
+			}
+			return;
+		}).catch(function(err){
+			console.log('media add error:'+err);
+			return err;
+		});
+		}
+	},
+	addContent: function(post,content){
+		if(content){
+			models.Content.create({content:content,post:post}).then(function(newContent,create){
+			if(create){
+			}
+			return;
+		}).catch(function(err){
+			console.log('Content add error:'+err);
+			return err;
+		});
+		}
+	},//@Not working yet
+	toggleStar: function(post,user){
+		return post;
+	},
+  };
 
 var sendResponse = function(res, query){
   	Post.findAll(query).then(function(posts){
@@ -15,111 +65,68 @@ var sendResponse = function(res, query){
 
 module.exports.getPosts = function(req,res){
 	Post.findAll({where:{username:req.headers.x_username}}).then(function(posts){
-		post.forEach(function(post){
-			posts.pop(post);
-			post.content = getContent(post.id);
-			post.media = getMedia(post.id);
-			post.comments = getComments(post.id);
-			post.stars = getStars(post.id);
-			posts.push(post);
+		var newPosts = [];
+
+		posts.forEach(function(post){
+		var cont =  Db.getContent(post.id);
+		var med = Db.getMedia(post.id);
+		var com = Db.getComments(post.id);
+
+			var newPost = {
+				id: post.id,
+				username: post.username,
+				time:post.time,
+				content: cont,
+				media: med,
+				comments: com
+			};
+			//post.stars = Db.getStars(post.id);
+			newPosts.push(newPost);
 		});//end for each
-		res.send(posts);
+		res.send(newPosts);
 	});//end query	
 };
 
 module.exports.getOnePost = function(req,res){
 	Post.findAll({where:{username:req.params.username,id:req.params.id}}).then(function(post){
-		post.content = getContent(post.id);
-		post.media = getMedia(post.id);
-		post.comments = getComments(post.id);
-		post.stars = getStars(post.id);
+		post.content = Db.getContent(post.id);
+		post.media = Db.getMedia(post.id);
+		post.comments = Db.getComments(post.id);
+		//post.stars = Db.getStars(post.id);
 		res.send(post);
 	});//end query	
 };
 
 
 module.exports.createPost = function(req,res){
-	var newPost = {
-		time: Date.now(),
-		username: req.headers.x_username
-	};
-	Post.create(newPost).spread(function(post,create){
-		var media;
-		var content;
-		if(create){
-		}
+	Post.create({time:Date.now(),username:req.headers.x_username}).then(function(post,create){
+		console.log('Post id:' + post.id+'media:'+req.body.media);
 		if(req.body.media){
-			media = addMedia(post,req.body.media);
+			Db.addMedia(post.id,req.body.media);
 		}
 		if(req.body.content){
-			content = addContent(post,req.body.content);
+			Db.addContent(post.id,req.body.content);
 		}
-		getOnePost({
-			req:{
-				params:{
-					username:post.author,
-					id:post.id
-				}
+		res.send({
+			newPost:{
+				id:post.id,
+				username:post.username,
+				time:post.time,
+				media:req.body.media,
+				content:req.body.content
 			}
 		});
+		
 	}).catch(function(err){
-		res.send(err);
+		res.send('Error:'+ err);
 	});
 };
 
 // =============== GETS ALL CONTENT,MEDIA,COMMENTS WITH EACH POST ============ //
-module.exports.getMedia = function(post){
-	models.Media.findAll({where:{post:post}}).then(function(media){
-		return media;
-	});
-};
 
-module.exports.getContent = function(post){
-	models.Content.findAll({where:{post:post}}).then(function(content){
-		return content;
-	});
-};
 
-module.exports.getComments = function(post){
-	models.Comment.findAll({where:{post:post}}).then(function(comments){
-		return comments;
-	});
-};
-
-module.exports.getStars = function(post){
-	models.Star.findAll({where:{post:post}}).then(function(stars){
-		return stars;
-	});
-};
 
 
 
 
 // =================================== END =================================== //
-
-
-module.exports.addMedia = function(post,media){
-	models.Media.create({link:media,post:post.id}).spread(function(newMedia,create){
-		if(create){
-		}
-		return;
-	}).catch(function(err){
-		res.send(err);
-	});
-};
-
-module.exports.addContent = function(post,content){
-	models.Content.create({content:content,post:post.id}).spread(function(newPost,create){
-		if(create){
-		}
-		return;
-	}).catch(function(err){
-		res.send(err);
-	});
-};
-
-
-//@Not working yet
-module.exports.toggleStar = function(post,user){
-	return post;
-};
