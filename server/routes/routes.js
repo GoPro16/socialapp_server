@@ -5,52 +5,37 @@ var router = express.Router();
 var UserMethods = require("../controllers/userController.js"),
 	CommentMethods = require("../controllers/commentController.js"),
 	PostMethods = require("../controllers/postController.js"),
-	FollowMethods = require("../controllers/followController.js"),
-	ConsoleMethods = require("../controllers/managerController.js");
+	ConnectionMethods = require("../controllers/connectionController.js");
 
 //Middleware for sending token to user
 var Auth = require('../middleware/auth.js');
 
 //Requires that all routes validate their request
-router.all('/api/v1/*',require('../middleware/ValidateRequest.js'));
+router.all('/api/v1/*',require('../middleware/validateRequest.js'));
 
 /* ==================== API ENDPOINTS ====================== */
-router.post("/login",Auth.login);
+//Login doesn't require validation
+router.post("/api/login",Auth.login);
+//creates a new user
+router.post("/api/users",UserMethods.createUser);
 
-router.get("/api/v1/users/:userid/posts",PostMethods.getPosts);
-router.post("/api/v1/users/:userid/posts",PostMethods.createPost);
-
+//posts for a user
+router.get("/api/v1/users/posts",PostMethods.getPosts);
+router.post("/api/v1/users/posts",PostMethods.createPost);
+//gets the comments for a post of a user
 router.get("/api/v1/users/:userid/posts/:postid/comments",CommentMethods.getComments);
 router.post("/api/v1/users/:userid/posts/:postid/comments",CommentMethods.createComment);
 
-router.get("/api/v1/users/:userid/followers",FollowMethods.getFollowers);
-router.get("/api/v1/users/:userid/following",FollowMethods.getFollowing);
-router.post("/api/v1/users/:userid/follow",FollowMethods.addFollow);
+//get the followers and following of a user
+router.get("/api/v1/users/followers",ConnectionMethods.getFollowers);
+router.get("/api/v1/users/:userid/following",ConnectionMethods.getFollowing);
+router.post("/api/v1/users/:userid/follow",ConnectionMethods.addConnection);
 
-router.post("/api/users",UserMethods.createUser);
+//Gets all users(requires admin validation)
 router.get("/api/v1/users",UserMethods.getUsers);
+
+//Checks if a user exists/valid
 router.get("/api/users/check",UserMethods.checkUser);
-
-var models = require('../database/models');
-
-/* ====================== WEB ENDPOINTS ====================== */
-//Eventually all will be react 
-
-router.get("/",ConsoleMethods.renderPage);
-
-router.post("/user",ConsoleMethods.createUser);
-
-router.post("/post",ConsoleMethods.createPost);
-
-router.post("/comment",ConsoleMethods.createComment);
-
-router.post("/delete",ConsoleMethods.deleteUser);
-
-router.post("/follow",ConsoleMethods.addFollow);
-
-router.get("/feed",function(req,res){
-	res.render('feed');
-});
 
 //======================================
 module.exports = router;

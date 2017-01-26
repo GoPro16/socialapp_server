@@ -1,5 +1,5 @@
 var models = require('../database/models');
-var Follow = models.Follow;
+var Connection = models.Connection;
 
 var sendResponse = function(res, query){
   	Follow.findAll(query).then(function(follows){
@@ -12,34 +12,34 @@ var sendResponse = function(res, query){
 };
 
 module.exports.getFollowers = function(req,res){
-	Follow.findAll({where:{following:req.params.userid}}).then(function(followers){
+	Connection.findAll({where:{following:req.params.user.id}}).then(function(followers){
 		res.send(followers);
 	});	
 };
 
 module.exports.getFollowing = function(req,res){
-	Follow.findAll({where:{follower:req.params.userid}}).then(function(following){
+	Connection.findAll({where:{user:req.params.user.id}}).then(function(following){
 		res.send(following);
 	});	
 };
 
 
-module.exports.addFollow = function(req,res){
-	models.Follow.findAll({where:{
+module.exports.addConnection = function(req,res){
+	Connection.findAll({where:{
 		following:req.body.following,
 		follower:req.body.follower
 	}}).then(function(follower){
 		if(follower){
 			res.send(follower);
 		}else{
-			var newFollower = {
-		 	follower : req.body.follower,
+			var newConnection = {
+		 	user : req.body.user,
 		 	following: req.body.following
 			};
-			models.Follow.create(newFollower).spread(function(follower,create){
+			Connection.create(newFollower).spread(function(follower,create){
 			if(create){
 			}
-			res.send(newFollower)
+			res.send(newFollower);
 			}).catch(function(err){
 				res.send(err);
 			});

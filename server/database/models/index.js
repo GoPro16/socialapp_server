@@ -4,7 +4,7 @@ var Sequelize = require("sequelize");
 var fs        = require("fs");
 var path      = require("path");
 
-var sequelize = new Sequelize('codename_rooster', 'farmer', 'USF>UNF', {
+var sequelize = new Sequelize('social_app_v1_db', 'social_app_admin', 'caWresp4DAvu', {
     host: 'danek.me',
     port: 3306,
     dialect: 'mysql',

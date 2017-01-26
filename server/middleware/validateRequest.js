@@ -8,8 +8,8 @@ module.exports = function(req, res, next) {
 
   // We skip the token outh for [OPTIONS] requests.
   //if(req.method == 'OPTIONS') next();
-  var token = (req.params && req.params.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
-  var key = (req.params && req.params.x_key) || (req.query && req.query.x_key) || req.headers['x-key'];
+  var token = (req.params && req.params.access_token) || (req.query && req.query.access_token) || req.headers.x_token;
+  var key = (req.params && req.params.x_key) || (req.query && req.query.x_key) || req.headers.x_username;
   if (token || key) {
     try {
       var decoded = jwt.decode(token, secret());

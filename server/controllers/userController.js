@@ -46,21 +46,29 @@ module.exports.checkUser = function(req, res){
 module.exports.createUser = function(req,res){
 	var newUser = {
 		username : req.body.username,
-		hash : req.body.hash
+		email : req.body.email,
+    hash: req.body.hash,
+    firstName : req.body.firstName,
+    lastName : req.body.lastName,
+    birthday : req.body.birthday,
+    dateJoined : Date.now(),
+    overallRating : 0,
+    slogan : ""
 	};
 	User.create(newUser).spread(function(user,create){
 		if(create){
 		}
-		res.send(user);
+		res.redirect("/api/login",{username:user.username,password:user.hash});
 	}).catch(function(err){
 		res.send(err);
 	});
 };
 
-module.exports.validateUsername = function(username){
+module.exports.validateUsername = function(user){
   var query = {
-    where: {username: username},
-    raw: true,
+    where: {
+        username:user
+      }
   };
   return User.findAll(query).spread(function(user){
     if(user){
