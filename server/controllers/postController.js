@@ -1,17 +1,24 @@
 var models = require('../database/models');
 var Post = models.Post;
-
+var async = require('async');
 
 var Db = {
-	getMedia: function(post){
-		models.Media.findAll({where:{post:post}}).then(function(media){
-			return media;
+	getMedia: function(post,callback){
+		models.Media.find({where:{post:post}}).then(function(media){
+			if(media){
+				callback(media.link);
+			}else{
+				callback("");
+			}
 		});
 	},
-	getContent: function(post){
-		models.Content.findAll({where:{post:post}}).then(function(newContent){
-			console.log('content: '+newContent.content);
-			return newContent;
+	getContent: function(post,callback){
+		models.Content.find({where:{post:post}}).then(function(newContent){
+			if(newContent){
+				callback(newContent.content);
+			}else{
+				callback("");
+			}
 		});
 	},
 	getComments: function(post){
@@ -63,48 +70,56 @@ var sendResponse = function(res, query){
   });
 };
 
+
+
 module.exports.getPosts = function(req,res){
 	Post.findAll({where:{username:req.headers.x_username}}).then(function(posts){
-		var newPosts = [];
-
-		posts.forEach(function(post){
-		var cont =  Db.getContent(post.id);
-		var med = Db.getMedia(post.id);
-		var com = Db.getComments(post.id);
-
-			var newPost = {
-				id: post.id,
-				username: post.username,
-				time:post.time,
-				content: cont,
-				media: med,
-				comments: com
-			};
-			//post.stars = Db.getStars(post.id);
-			newPosts.push(newPost);
+		async.each(posts,function(post){
+			Db.getContent(post.id,function(content){
+				Db.getMedia(post.id,function(media){
+					post.content = content;
+					post.media = media;
+					console.log('UPDATED POST');
+				});//get media
+			});//get content
+		},function(err){
+			if(err){
+				console.log('ASYNC FOREACH ERROR: '+err);
+			}else{
+				console.log('RES SENDING THE NEW POSTSSS@!@@@@@@');
+				res.send(posts);
+			}
 		});//end for each
-		res.send(newPosts);
 	});//end query	
 };
 
 module.exports.getOnePost = function(req,res){
-	Post.findAll({where:{username:req.params.username,id:req.params.id}}).then(function(post){
-		post.content = Db.getContent(post.id);
-		post.media = Db.getMedia(post.id);
-		post.comments = Db.getComments(post.id);
+	Post.find({where:{username:req.headers.x_username,id:req.headers.id}}).then(function(foundPost){
+		Db.getContent(req.headers.id,function(content){
+			Db.getMedia(req.headers.id,function(media){
+				res.send({
+					post:{
+						id:foundPost.id,
+						time:foundPost.time,
+						username:foundPost.username,
+						content: content,
+						media:media
+					}
+				});
+			});
+		});
+		//post.comments = Db.getComments(parseInt(req.headers.id));
 		//post.stars = Db.getStars(post.id);
-		res.send(post);
 	});//end query	
 };
 
 
 module.exports.createPost = function(req,res){
 	Post.create({time:Date.now(),username:req.headers.x_username}).then(function(post,create){
-		console.log('Post id:' + post.id+'media:'+req.body.media);
-		if(req.body.media){
+		if(req.body.media != null){
 			Db.addMedia(post.id,req.body.media);
 		}
-		if(req.body.content){
+		if(req.body.content != null){
 			Db.addContent(post.id,req.body.content);
 		}
 		res.send({

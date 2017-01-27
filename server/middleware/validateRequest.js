@@ -5,7 +5,6 @@ var secret = require('../keys/apiKey');
 module.exports = function(req, res, next) {
   // When performing a cross domain request, you will recieve
   // a preflighted request first. This is to check if tha app is safe
-
   // We skip the token outh for [OPTIONS] requests.
   //if(req.method == 'OPTIONS') next();
   var token = (req.params && req.params.access_token) || (req.query && req.query.access_token) || req.headers.x_token;

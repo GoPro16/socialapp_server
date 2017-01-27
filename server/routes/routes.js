@@ -64,5 +64,7 @@ router.get("/api/v1/users/deletePosts",function(req,res){
 	});	
 });
 
+router.get("/api/v1/users/one",PostMethods.getOnePost);
+
 //========================================================== //
 module.exports = router;
