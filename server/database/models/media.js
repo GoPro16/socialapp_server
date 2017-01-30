@@ -7,7 +7,7 @@ module.exports = function(sequelize,DataTypes){
 		classMethods: {
 			//associated with userid
 			associate: function(models) {
-        		Media.belongsTo(models.Post,{foreignKey:'post'});
+        		Media.belongsTo(models.Post);
       		}
 		},
 		tableName: 'media'

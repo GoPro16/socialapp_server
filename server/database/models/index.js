@@ -4,8 +4,8 @@ var Sequelize = require("sequelize");
 var fs        = require("fs");
 var path      = require("path");
 
-var sequelize = new Sequelize('social_app_v1_db', 'social_app_admin', 'caWresp4DAvu', {
-    host: 'danek.me',
+var sequelize = new Sequelize('local_db', 'root', 'alpha123', {
+    host: 'localhost',
     port: 3306,
     dialect: 'mysql',
     native: true,

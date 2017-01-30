@@ -58,7 +58,7 @@ module.exports.createUser = function(req,res){
 	User.create(newUser).spread(function(user,create){
 		if(create){
 		}
-		res.redirect("/api/login",{username:user.username,password:user.hash});
+		res.send(user);
 	}).catch(function(err){
 		res.send(err);
 	});

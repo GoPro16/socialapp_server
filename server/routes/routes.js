@@ -19,11 +19,15 @@ router.post("/api/login",Auth.login);
 //creates a new user
 router.post("/api/users",UserMethods.createUser);
 
-//posts for a user
+//posts for a user 
 router.get("/api/v1/users/posts",PostMethods.getPosts);
 router.post("/api/v1/users/posts",PostMethods.createPost);
-//gets the comments for a post of a user
-router.get("/api/v1/users/:userid/posts/:postid/comments",CommentMethods.getComments);
+
+//Star toggle
+router.post("/api/v1/users/posts/star",PostMethods.toggleStar);
+
+
+//create a comment for a post
 router.post("/api/v1/users/:userid/posts/:postid/comments",CommentMethods.createComment);
 
 //get the followers and following of a user

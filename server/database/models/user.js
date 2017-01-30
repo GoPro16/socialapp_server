@@ -24,6 +24,8 @@ module.exports = function(sequelize,DataTypes){
 	},{
 		classMethods: {
 			associate: function(models) {
+				User.hasMany(models.Post);
+				User.belongsToMany(models.User,{through:'connections',as:'follower'});
         	}
 		},
 		tableName: 'users'

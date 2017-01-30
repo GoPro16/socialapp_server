@@ -19,6 +19,7 @@
     "jwt-simple": "^0.5.1",
     "mysql": "^2.12.0",
     "path": "^0.12.7",
-    "sequelize": "^3.29.0"
+    "sequelize": "^3.29.0",
+    "underscore": "^1.8.3"
   }
 }

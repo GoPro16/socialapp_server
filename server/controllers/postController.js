@@ -1,39 +1,13 @@
 var models = require('../database/models');
 var Post = models.Post;
-var async = require('async');
+var Content = models.Content;
 
+var async = require('async');
+var _ = require('underscore');
 var Db = {
-	getMedia: function(post,callback){
-		models.Media.find({where:{post:post}}).then(function(media){
-			if(media){
-				callback(media.link);
-			}else{
-				callback("");
-			}
-		});
-	},
-	getContent: function(post,callback){
-		models.Content.find({where:{post:post}}).then(function(newContent){
-			if(newContent){
-				callback(newContent.content);
-			}else{
-				callback("");
-			}
-		});
-	},
-	getComments: function(post){
-		models.Comment.findAll({where:{post:post}}).then(function(comments){
-			return comments;
-		});
-	},
-	getStars: function(post){
-		models.Star.findAll({where:{post:post}}).then(function(stars){
-			return stars;
-		});
-	},
 	addMedia: function(post,media){
 		if(media){
-			models.Media.create({link:media,post:post}).then(function(newMedia,create){
+			models.Media.create({link:media,PostId:post}).then(function(newMedia,create){
 			if(create){
 			}
 			return;
@@ -45,7 +19,7 @@ var Db = {
 	},
 	addContent: function(post,content){
 		if(content){
-			models.Content.create({content:content,post:post}).then(function(newContent,create){
+			models.Content.create({content:content,PostId:post}).then(function(newContent,create){
 			if(create){
 			}
 			return;
@@ -73,49 +47,47 @@ var sendResponse = function(res, query){
 
 
 module.exports.getPosts = function(req,res){
-	Post.findAll({where:{username:req.headers.x_username}}).then(function(posts){
-		async.each(posts,function(post){
-			Db.getContent(post.id,function(content){
-				Db.getMedia(post.id,function(media){
-					post.content = content;
-					post.media = media;
-					console.log('UPDATED POST');
-				});//get media
-			});//get content
-		},function(err){
-			if(err){
-				console.log('ASYNC FOREACH ERROR: '+err);
-			}else{
-				console.log('RES SENDING THE NEW POSTSSS@!@@@@@@');
-				res.send(posts);
-			}
-		});//end for each
+	Post.findAll({
+		where:{UserUsername:req.headers.x_username},
+		include:[
+		{model:Content},
+		{model:models.Media},
+		{model:models.Comment},
+		{model:models.Star}
+		]
+		}).then(function(posts){
+		res.send(posts);
+	});//end query	
+};
+
+module.exports.toggleStar = function(req,res){
+	models.Star.findOrCreate({where:{UserUsername:req.headers.x_username,PostId:req.headers.id}}).spread(function(star,create){
+		if(create){
+			console.log('\nCREATED STAR!\n');
+			res.send('created');
+		}else{
+			console.log('\nDELETED STAR!\n');
+			star.destroy();
+			res.send('destroyed');
+		}
+	}).catch(function(err){
+		res.send('Error'+err);
 	});//end query	
 };
 
 module.exports.getOnePost = function(req,res){
-	Post.find({where:{username:req.headers.x_username,id:req.headers.id}}).then(function(foundPost){
-		Db.getContent(req.headers.id,function(content){
-			Db.getMedia(req.headers.id,function(media){
-				res.send({
-					post:{
-						id:foundPost.id,
-						time:foundPost.time,
-						username:foundPost.username,
-						content: content,
-						media:media
-					}
-				});
-			});
-		});
-		//post.comments = Db.getComments(parseInt(req.headers.id));
-		//post.stars = Db.getStars(post.id);
+	Post.find({where:{id:req.headers.id},
+		include:[
+		{model:Content},
+		{model:models.Media},
+		{model:models.Comment},
+		{model:models.Star}
+		]}).then(function(foundPost){
+		res.send(foundPost);
 	});//end query	
 };
-
-
 module.exports.createPost = function(req,res){
-	Post.create({time:Date.now(),username:req.headers.x_username}).then(function(post,create){
+	Post.create({time:Date.now(),UserUsername:req.headers.x_username}).then(function(post,create){
 		if(req.body.media != null){
 			Db.addMedia(post.id,req.body.media);
 		}
@@ -125,10 +97,12 @@ module.exports.createPost = function(req,res){
 		res.send({
 			newPost:{
 				id:post.id,
-				username:post.username,
+				username:post.UserUsername,
 				time:post.time,
 				media:req.body.media,
-				content:req.body.content
+				content:req.body.content,
+				comments: [],
+				stars: 0
 			}
 		});
 		
