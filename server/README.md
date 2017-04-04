@@ -1,6 +1,6 @@
-#Social App Server
+# Social App Server
 
-##Installation
+## Installation
 ```bash
 $ npm install
 ```
@@ -13,7 +13,7 @@ models.sequelize.sync({force: false}).then(function () {
 });
 ```
 
-##Usage
+## Usage
 Run the App:
 ```bash
 $ npm start
