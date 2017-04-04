@@ -1,11 +1,11 @@
-#Social App Website
+# Social App Website
 
-##Installation
+## Installation
 ```bash
 $ npm install
 ```
 
-##Usage
+## Usage
 Run the App:
 ```bash
 $ npm start
